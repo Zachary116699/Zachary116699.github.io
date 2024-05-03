@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#6495ED"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#6495ED">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1931年哥德尔发表的一篇论文《论数学原理和有关系统Ⅰ的不可判定性》，其中哥德尔证明了：如果皮亚诺算术系统（下称PA）是协调的，则存在关于自然数的真命题，它在PA中既不能被证明为真，也不能被证明为否。这便是哥德尔第一不完全性定理。紧接着，哥德尔证明了：如果PA是协调的，则PA的协调性在PA中是不可证的。这便是哥德尔第二不完全性定理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哥德尔定理证明思路分析">
+<meta property="og:url" content="http://example.com/2024/05/03/Godel/index.html">
+<meta property="og:site_name" content="大水笔✰档案室">
+<meta property="og:description" content="1931年哥德尔发表的一篇论文《论数学原理和有关系统Ⅰ的不可判定性》，其中哥德尔证明了：如果皮亚诺算术系统（下称PA）是协调的，则存在关于自然数的真命题，它在PA中既不能被证明为真，也不能被证明为否。这便是哥德尔第一不完全性定理。紧接着，哥德尔证明了：如果PA是协调的，则PA的协调性在PA中是不可证的。这便是哥德尔第二不完全性定理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/Godel.webp">
+<meta property="og:image" content="http://example.com/images/Godel_01.png">
+<meta property="article:published_time" content="2024-05-03T01:33:14.759Z">
+<meta property="article:modified_time" content="2024-05-03T04:48:45.031Z">
+<meta property="article:author" content="超绝可爱大水笔">
+<meta property="article:tag" content="Logic">
+<meta property="article:tag" content="歌德尔定理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/Godel.webp">
+
+
+<link rel="canonical" href="http://example.com/2024/05/03/Godel/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/05/03/Godel/","path":"2024/05/03/Godel/","title":"哥德尔定理证明思路分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>哥德尔定理证明思路分析 | 大水笔✰档案室</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">大水笔✰档案室</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A5%E5%BE%B7%E5%B0%94%E5%AE%9A%E7%90%86"><span class="nav-number">1.1.</span> <span class="nav-text">哥德尔定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AC%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">公理方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%82%96%E8%AE%BA%E5%92%8C%E8%87%AA%E6%8C%87"><span class="nav-number">1.3.</span> <span class="nav-text">悖论和自指</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%A5%E5%BE%B7%E5%B0%94%E7%BC%96%E7%A0%81"><span class="nav-number">1.4.</span> <span class="nav-text">哥德尔编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%81%E6%98%8E%E6%80%9D%E8%B7%AF"><span class="nav-number">1.5.</span> <span class="nav-text">证明思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%84%8F%E4%B9%89%E5%92%8C%E6%80%9D%E8%80%83"><span class="nav-number">1.6.</span> <span class="nav-text">意义和思考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">1.7.</span> <span class="nav-text">参考文献</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="超绝可爱大水笔"
+      src="/images/uuz_kanata_01.png">
+  <p class="site-author-name" itemprop="name">超绝可爱大水笔</p>
+  <div class="site-description" itemprop="description">一只大水笔</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Zachary116699" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Zachary116699" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/23287283" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;23287283" rel="noopener me" target="_blank"><i class="fab fa-bilibili fa-fw"></i>Bilibili</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/05/03/Godel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/uuz_kanata_01.png">
+      <meta itemprop="name" content="超绝可爱大水笔">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大水笔✰档案室">
+      <meta itemprop="description" content="一只大水笔">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="哥德尔定理证明思路分析 | 大水笔✰档案室">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          哥德尔定理证明思路分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-05-03 09:33:14 / 修改时间：12:48:45" itemprop="dateCreated datePublished" datetime="2024-05-03T09:33:14+08:00">2024-05-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Logic/" itemprop="url" rel="index"><span itemprop="name">Logic</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>1931年哥德尔发表的一篇论文《论数学原理和有关系统Ⅰ的不可判定性》，其中哥德尔证明了：如果皮亚诺算术系统（下称PA）是协调的，则存在关于自然数的真命题，它在PA中既不能被证明为真，也不能被证明为否。这便是哥德尔第一不完全性定理。紧接着，哥德尔证明了：如果PA是协调的，则PA的协调性在PA中是不可证的。这便是哥德尔第二不完全性定理。</p>
+<p><img src="/images/Godel.webp" alt="Godel"></p>
+<span id="more"></span>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="哥德尔定理"><a href="#哥德尔定理" class="headerlink" title="哥德尔定理"></a>哥德尔定理</h2><p>1931年哥德尔发表的一篇论文《论数学原理和有关系统Ⅰ的不可判定性》，其中哥德尔证明了：如果皮亚诺算术系统（下称PA）是协调的，则存在关于自然数的真命题，它在PA中既不能被证明为真，也不能被证明为否。这便是哥德尔第一不完全性定理。紧接着，哥德尔证明了：如果PA是协调的，则PA的协调性在PA中是不可证的。这便是哥德尔第二不完全性定理。</p>
+<p>哥德尔定理现在被表述为：</p>
+<p>第一定理：任意一个包含一阶谓词逻辑与初等数论的形式系统，都存在一个命题，它在这个系统中既不能被证明为真，也不能被证明为否。</p>
+<p>第二定理：如果系统S含有初等数论，当S一致时，它的一致性不可能在S内证明。</p>
+<h2 id="公理方法"><a href="#公理方法" class="headerlink" title="公理方法"></a>公理方法</h2><p>公理方法，就是先不加证明地将某些命题当作公理或者前提，然后从公理中推导出系统中所有其他的命题作为定理。公理构成了系统的“基础”，而定理这是仅靠逻辑原理从公理得到的“上层建筑”。其中十分经典的例子便是欧式几何，仅凭借数条公设和公理，竟能从中推导出无穷无尽的命题。</p>
+<p>公理方法的研究越来越深入，为数学的各个分支都提供一组适当的公理。哥德尔定理问世之前的舆论普遍认为，数学的每一分支都能找到一组公理，从其出发就足以系统地推导出该研究领域中所有真命题。这样，只要将公理输入计算机，让其运算，便可使其成为“真理产生机”。</p>
+<p>而哥德尔的论文则是反驳了这一点，他的证明向世人宣布了公理方法的局限性，即使是非负整数的性质也不可能被完全公理化。</p>
+<h2 id="悖论和自指"><a href="#悖论和自指" class="headerlink" title="悖论和自指"></a>悖论和自指</h2><p>公元前6世纪，克里特哲学家埃庇米尼得斯（Epimenides）说了一句很有名的话：“我的这句话是假的。”这句话被称说谎者悖论，因为如果埃庇米尼得斯的这句话是真的，他说的这句话“我的这句话是假的”为真，则这句话是假的；如果这句话是假的，那他说的这句话“我的这句话是假的”为假，又导出这句话是真的。</p>
+<p>罗素构造了一个集合S：S由一切不属于自身的集合所组成。然后罗素问：S是否属于S呢？根据排中律，一个元素要么属于某个集合，要么不属于某个集合。因此，S要么属于S，要么不属于S。如果S属于S，根据S的定义，S就不属于S；反之，如果S不属于S，同样根据定义，S就属于S。这样便陷入一个怪圈。</p>
+<p>说谎者悖论和罗素悖论都是因为自指产生的悖论。当一个东西谈论到自身，往往会陷如一个怪圈。同样原理产生的悖论还有理发师悖论、理查德悖论、图书馆悖论等。而哥德尔的证明就是在PA中构造出了自指的命题，从而导出悖论，从而说明了PA的局限性。也可以说，哥德尔证明了PA是自指的。</p>
+<h2 id="哥德尔编码"><a href="#哥德尔编码" class="headerlink" title="哥德尔编码"></a>哥德尔编码</h2><p>《哥德尔证明》一书中，证明哥德尔定理使用的形式演算系统称为PM，指任何能够构建基数以及基数加法和乘法的形式演算系统，即包含初等数论的形式演算系统。</p>
+<p>哥德尔编码给每一个原始符号，每一个公式和每一个证明都指定了一个独一无二的数，这个数称为“哥德尔数”。</p>
+<p>PM的原始符号分为两类：固定符号和变量。哥德尔编码的第一步是为这些固定符号和变量指定哥德尔数。</p>
+<p><img src="/images/Godel_01.png" alt="Godel"></p>
+<p>第二步，为每个公式指定哥德尔数。设$P_n$为原始符号，$G(P_i)$为该原始符号的哥德尔数，$G(P_1 P_2 \cdots P_n)$为某个公式的哥德尔数，则每个公式可以用以下方式联系到一个唯一的数字：</p>
+<center>$G(P_1 P_2 \cdots P_n)=p_1^{G(P_1)} p_2^{G(P_2)} \cdots p_n^{G(P_n)}$</center>
+
+<p>其中，$p_1=2,p_2=3,p_3=5,\cdots$，$p_i$对应第i个素数。例：</p>
+<center>$G((\exists x) (x=sy))=2^8 3^4 5^{13} 7^9 11^8 13^{13} 17^5 19^7 23^{17} 29^9$</center>
+
+<p>公式“$(\exists x) (x=sy)$”表达的意义是“每个自然数都有后继”，上式计算出了它对应的的哥德尔数。</p>
+<p>第三步，对每个公式序列进行编码，这一步和第二步是类似的。设$A_n$为一个公式，$G(A_i)$为该公式的哥德尔数，$A_1, A_2, \cdots, A_n$为某个公式序列，设$G(A_1, A_2, \cdots, A_n)$为某个公式序列的哥德尔数，则每个公式序列可以用以下方式联系到一个唯一的数字：</p>
+<center>$G(A_1, A_2, \cdots, A_n)=p_1^{G(A_1)} p_2^{G(A_2)} \cdots p_n^{G(A_n)}$</center>
+
+<p>其中，$p_1=2,p_2=3,p_3=5,\cdots$，$p_i$对应第i个素数。</p>
+<p>通过哥德尔编码，每个公式、公式序列都得到了唯一的哥德尔数。到此为止，我们所做的是找到了一种使形式演算完全“算术化”的方法。一旦给出一个表达式，就可以计算与之相对应的唯一的哥德尔数。</p>
+<p>同时，通过这种编码方式，只要给定一个数字，我们就能确定它是不是哥德尔数。通过质因数分解，我们可以将一个哥德尔数对应的公式还原出来，例：</p>
+<center>$243000000=2^6 \times 3^5 \times 5^6$ 对应公式 $0=0$</center>
+
+<h2 id="证明思路"><a href="#证明思路" class="headerlink" title="证明思路"></a>证明思路</h2><p><strong>第一步</strong>，哥德尔表明，可以构造PM的一个公式G，使其表达以下元数学命题：“公式G在PM中不可证明”。即构造一个自指的公式G，这个公式描述了自身的不可证明的性质。</p>
+<p>为此，需要先讨论以下的元数学命题：具有哥德尔数$x$的公式序列是哥德尔数为$z$的公式的证明。借助元数学的算术化，这个关于数字$x$和数字$z$的纯数字关系是可以被映射到数论之中的。假定哥德尔数$x$对应的公式序列是一个证明，则其最后一行的公式的哥德尔数为$z$，用记号“$dem(x,z)$”代指“$x$和$z$这两个哥德尔数的有如上的算术关系”的数论术语。哥德尔在他的论文中证明了”$dem(x,z)$”是$x$和$z$之间的原始递归关系，再通过哥德尔对应引理，可以在PM中找到一个公式表达了这个关系，用记号“$Dem(x,z)$”来代指PM中对应于“$dem(x,z)$”的公式。</p>
+<p>还需引入一个$sub$函数，它的作用是求如下公式的哥德尔数：取哥德尔数为$x$的公式，用$x$替换掉该公式中所有变量$y$的出现而得到的新公式的哥德尔数。将这个函数记作“$sub(x,17,x)$”（17是变量$y$对应的哥德尔数）。在证明$sub$函数是原始递归的情况下，PM中存在一个恰好映射它的形式表达式，记作“$Sub(x,17,x)$”。</p>
+<p>现在先考虑这样的公式：“$\sim (\exists x) Dem(x, z)$”。这个公式表达的元数学命题是：不存在这样的$x$，使得具有哥德尔数$x$的公式序列是哥德尔数为$z$的公式的证明。这个公式其实是对元数学命题“哥德尔数为$z$的公式在PM中不可证明”的形式解释。从这个公式的一个特例开始，记作公式（1）：</p>
+<center>$\sim (\exists x) Dem(x, Sub(y,17,y)) \eqno{(1)} $</center>
+
+<p>这个公式表达的元数学命题为：哥德尔数为$sub(y,17,y)$的公式在PM中不可证明。公式（1）属于PM，故它有一个哥德尔数，记作$n$。这时，用$n$替换掉该公式中$y$的每一次出现，这样做将会产生一个新的公式，这也是我们第一步中要构造的公式，记作公式G：</p>
+<center>$\sim (\exists x) Dem(x, Sub(n,17,n)) \eqno{G} $</center>
+
+<p>公式G所表达的元数学命题是：哥德尔数为$sub(n,17,n)$的公式在PM中不可证明。由于公式G中不再有未量化的变量，故公式G的意义是确定的。公式G属于PM，故其对应于一个哥德尔数$g$。因为$sub(n,17,n)$是通过将哥德尔数为n的公式中用$n$替换哥德尔数为17的变量（即$y$）而得到的公式的哥德尔数，而G是通过将哥德尔数为$n$的公式（1）中用$n$替换哥德尔数为17的变量而得到的公式，所以，$g=sub(n,17,n)$。</p>
+<p>此时，再考察公式G所表达的元数学命题：哥德尔数为$g$的公式不可证明。而G对应的哥德尔数恰好为$g$，故G表达的元数学命题也等价于：公式G在PM中不可证明。于是哥德尔便构造了一个自指的公式，它断言自身不是PM的定理。</p>
+<p><strong>第二步</strong>，证明如果PM是一致的，则G不是PM的定理。哥德尔证明了如果公式G是可证的，则它的否定形式也是可证的，即$(\exists x) Dem(x, Sub(n,17,n))$，该公式表达的元数学命题为“公式G在PM中可证”；反之，若G的否定形式可证，则G本身也是可证的。即，G可证，当且仅当，$\sim$G可证。这一部分类似于说谎者悖论和罗素悖论，是由自指而产生的怪圈。</p>
+<p>因此，如果一个公式和其否定都能在PM中被推导出来，则PM是不一致的。如果PM是一致的，那么公式G和其否定形式在PM中都是不可证的，即公式G在PM中是不可判定的。</p>
+<p><strong>第三步</strong>，在元数学推理中，证明G是真的。不难看出G所说的为真。因为G表述的元数学命题是：公式G在 PM中不可证明。在数论层次上，G所说的是：不存在与数$sub(n,17,n)$有$dem$关系的数$x$。在第二步中，哥德尔证明了G在PM中是不可判定的，特别是不存在G在PM中的证明。所以不难得到，G在元数学推理中是一个真命题。</p>
+<p><strong>第四步</strong>，证明PM是一个不完全的形式演算系统。如果一个系统是完全的，则能够在此系统内表示的真命题都是可以使用演绎规则从公理中推导出来的。但哥德尔表明，公式G这个真命题在PM中式不可证明的，即不存在一个推导可以从公理出发得到公式G，因此PM是不完全的。</p>
+<p>不仅如此，PM不仅是不完全的，还是实质不完全的。即使将G加上作为一条公理，扩大了的系统仍然不足以形式地获得所有算术真理。通过一些类似的方法，可以构造出类似$dem$的关系，从而找到新的系统中不可判定的公式。</p>
+<p><strong>第五步</strong>，证明“如果PM是一致的，那么它的一致性是无法用任何可被映射到PM自身的元数学推理来证明”。要证明上述命题，首先考虑这个命题“如果PM是一致的，则PM是不完全的”。“PM是一致的”等价于在说“至少有一个公式在PM中不可证明”，考虑以下公式A：</p>
+<center>$(\exists y)\sim(\exists x)Dem(x,y) \eqno{A}$</center>
+
+<p>A表示的元数学命题为：在PM中，存在哥德尔数为$y$的公式，不存在任何哥德尔数为$x$的公式序列构成它的证明。这个公式表达了“PM是一致的”这个命题，因为不一致的系统可以推出一切公式。而在证明思路第一步找到的公式G，其表达的元数学命题“公式G在PM中不可证明”等价于“G不是PM的定理”。将两个公式结合到一起，得到：</p>
+<center>$(\exists y)\sim(\exists x)Dem(x,y) \supset \sim (\exists x) Dem(x, Sub(n,17,n)) \eqno{A \supset G}$</center>
+
+<p>至此，公式“$A \supset G$”表达的元数学命题为：如果PM是一致的，那么G不是PM的定理。公式“$A \supset G$”在PM中是形式可证明的。</p>
+<p>现在要证明“A在PM中是不可证明的”。首先假设A在PM中可被证明，则因为公式“$A \supset G$”在PM中是可证明的，根据命题演算的分离规则（MP规则），可以得到G在PM中是可证的。但是在证明思路的第二步中，哥德尔已经证明“如果PM是一致的，那么G在PM中是不可判定的”，故得矛盾，于是A在PM中不可证明。</p>
+<p>这又导出了新的矛盾。A表达的元数学命题是：PM是一致的。如果PM是一致的，并且PM的一致性可以被映射到PM中的元数学推理来证明，那么A在PM中应当是可证的，因为A在PM中表达PM的一致性。但是刚刚证明了A在PM中不可证明，于是得到“如果PM是一致的，PM的一致性无法在PM内得到证明”。</p>
+<p>另外，这个令人惊奇的结论并没有排除PM的一致性在元数学中的证明，而仅仅是排除了映射到PM自身内部的一致性证明。</p>
+<h2 id="意义和思考"><a href="#意义和思考" class="headerlink" title="意义和思考"></a>意义和思考</h2><p>哥德尔定理出现以前，数学界普遍认为，数学思想的每一个分支都能建立一个恰当的公理化系统，从而可以机械地通过演绎规则推理得到该领域中所有真命题。但哥德尔定理的出现表明，对于许多演绎系统，要确定系统内部逻辑的一致性是不可能的。根据这个结论，许多数学领域是无法完成其系统的公理化的，例如可以描述初等数论的系统。</p>
+<p>哥德尔定理使数学基础研究发生了划时代的变化，更是现代逻辑史上很重要的一座里程碑。该定理与塔尔斯基的形式语言的真理论，图灵机和判定问题，被赞誉为现代逻辑科学在哲学方面的三大成果。</p>
+<p>在数学证明领域中，哥德尔不完全性定理一举粉碎了数学家两千年来的信念。他告诉我们，真与可证是两个概念。可证的一定是真的，但真的不一定可证。某种意义上，悖论的阴影将永远伴随着我们。不仅如此，哥德尔不完全性定理的影响远远超出了数学的范围。它不仅使数学、逻辑学发生革命性的变化，引发了许多富有挑战性的问题，而且还涉及哲学、语言学和计算机科学等。</p>
+<p>在机器演算领域中，哥德尔告诉世人，不可能通过将公理方法转化为计算机内固定的一组指令，然后对系统中的所有问题进行演算给出答案。哥德尔不完全性定理表明，初等数论中有无穷无尽的命题超出了公理方法的能力范围，不管按其原理制造的机器有多么精妙，它都不具备回答这些问题的能力。给定一个问题，也许可以造出解决这个问题的机器，但是无法造出解决所有问题的机器。</p>
+<p>这个定理的确表明，人类思想的结构和力量，要比迄今为止所构想的非生命的机器复杂和微妙得多，人类的数学智慧没有简单到用几条公理和演绎规则就能推导出来。人类的大脑可以处理许多机器无法解决的数学问题，但人的大脑也是具有局限性的，现今依旧有许多数学命题无法解决。</p>
+<p>哥德尔定理的出现，表明了公理化方法的局限性，也要求人们去寻找另外的数学证明方法。哥德尔定理破除了深深扎根的先入之见，许多数学家为之绝望。但是它带来的绝不是绝望，而是希望，它是将人们从传统的公理方法中引导致新方法的指路灯。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] 内格尔、纽曼著，陈东威、连永君译：《哥德尔证明》，中国人民大学出版社，2008年3月第1版.</p>
+<p>[2] 赵希顺著：《简明数理逻辑》，科学出版社，2021年3月第1版.</p>
+<p>[3] 侯世达著，《哥德尔，艾舍尔，巴赫：集异璧之大成》翻译组译：《哥德尔，艾舍尔，巴赫：集异璧之大成》，商务出版社，1996年4月第1版.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Logic/" rel="tag"># Logic</a>
+              <a href="/tags/%E6%AD%8C%E5%BE%B7%E5%B0%94%E5%AE%9A%E7%90%86/" rel="tag"># 歌德尔定理</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/03/template/" rel="prev" title="模板文章">
+                  <i class="fa fa-angle-left"></i> 模板文章
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">超绝可爱大水笔</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
