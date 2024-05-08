@@ -1233,7 +1233,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #f039bb;
+    background: #04ff9c;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -2714,7 +2714,8 @@ header.header {
   }
 }
 p {
-  margin: 7.5px 7.5px 7.5px;
+  margin-top: 15px;
+  margin-bottom: 15px;
   text-indent: 4ex;
   line-height: 1.6;
 }
@@ -2741,4 +2742,7 @@ p {
   --btn-default-border-color: #87cefa;
   --btn-default-hover-bg: #87cefa;
   --btn-default-hover-border-color: #87cefa;
+}
+blockquote > p {
+  text-indent: 0;
 }
