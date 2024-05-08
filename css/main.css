@@ -1233,7 +1233,7 @@ pre code {
     vertical-align: middle;
   }
   .links-of-author a::before {
-    background: #04ff9c;
+    background: #65ffc9;
     display: inline-block;
     margin-right: 3px;
     transform: translateY(-2px);
@@ -2744,5 +2744,8 @@ p {
   --btn-default-hover-border-color: #87cefa;
 }
 blockquote > p {
+  text-indent: 0;
+}
+ol > li > p {
   text-indent: 0;
 }
