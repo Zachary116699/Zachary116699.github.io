@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#6495ED"><meta name="generator" content="Hexo 7.2.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#6495ED">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic%7CNoto+Serif+SC:300,300italic,400,400italic,700,700italic%7CConsole:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha256-XOqroi11tY4EFQMR9ZYwZWKj5ZXiftSx36RRuC3anlA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文介绍了如何通过ollama本地部署文本生成模型，分享部分代码。同时介绍接入到QQbot（澪依）上的模型的prompt。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ollama本地部署文本生成模型">
+<meta property="og:url" content="http://example.com/2024/05/10/ollama/index.html">
+<meta property="og:site_name" content="大水笔✰档案室">
+<meta property="og:description" content="本文介绍了如何通过ollama本地部署文本生成模型，分享部分代码。同时介绍接入到QQbot（澪依）上的模型的prompt。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/117722791.png">
+<meta property="og:image" content="http://example.com/images/ollama-1.png">
+<meta property="og:image" content="http://example.com/images/ollama-2.png">
+<meta property="og:image" content="http://example.com/images/ollama-3.png">
+<meta property="og:image" content="http://example.com/images/ollama-4.png">
+<meta property="article:published_time" content="2024-05-10T07:56:07.363Z">
+<meta property="article:modified_time" content="2024-05-10T09:26:37.563Z">
+<meta property="article:author" content="超绝可爱大水笔">
+<meta property="article:tag" content="ollama">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/117722791.png">
+
+
+<link rel="canonical" href="http://example.com/2024/05/10/ollama/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/05/10/ollama/","path":"2024/05/10/ollama/","title":"ollama本地部署文本生成模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ollama本地部署文本生成模型 | 大水笔✰档案室</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">大水笔✰档案室</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2llama3%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">本地部署llama3模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%8B%E8%BD%BDollama"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. 下载ollama</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%8B%E8%BD%BD%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 下载模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. 运行模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ollama-API%E8%B0%83%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">Ollama API调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%EF%BC%88python-requests%EF%BC%89%EF%BC%9Agenerate-API"><span class="nav-number">1.2.1.</span> <span class="nav-text">示例代码（python-requests）：generate API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%EF%BC%88python-requests%EF%BC%89%EF%BC%9Achat-API"><span class="nav-number">1.2.2.</span> <span class="nav-text">示例代码（python-requests）：chat API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%EF%BC%88python-requests%EF%BC%89%EF%BC%9Acreate-API"><span class="nav-number">1.2.3.</span> <span class="nav-text">示例代码（python-requests）：create API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BE%AA%E4%BE%9DBot"><span class="nav-number">1.3.</span> <span class="nav-text">澪依Bot</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="超绝可爱大水笔"
+      src="/images/uuz_kanata_01.png">
+  <p class="site-author-name" itemprop="name">超绝可爱大水笔</p>
+  <div class="site-description" itemprop="description">一只大水笔</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Zachary116699" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Zachary116699" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://space.bilibili.com/23287283" title="Bilibili → https:&#x2F;&#x2F;space.bilibili.com&#x2F;23287283" rel="noopener me" target="_blank"><i class="fab fa-bilibili fa-fw"></i>Bilibili</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/05/10/ollama/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/uuz_kanata_01.png">
+      <meta itemprop="name" content="超绝可爱大水笔">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大水笔✰档案室">
+      <meta itemprop="description" content="一只大水笔">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ollama本地部署文本生成模型 | 大水笔✰档案室">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ollama本地部署文本生成模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-05-10 15:56:07 / 修改时间：17:26:37" itemprop="dateCreated datePublished" datetime="2024-05-10T15:56:07+08:00">2024-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/python/" itemprop="url" rel="index"><span itemprop="name">python</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文介绍了如何通过ollama本地部署文本生成模型，分享部分代码。同时介绍接入到QQbot（澪依）上的模型的prompt。</p>
+<p><img src="/images/117722791.png" alt="117722791"></p>
+<span id="more"></span>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="本地部署llama3模型"><a href="#本地部署llama3模型" class="headerlink" title="本地部署llama3模型"></a>本地部署llama3模型</h2><p>本教程主要参考的视频如下，视频中介绍得很详细：</p>
+<blockquote>
+<p> 参考链接：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1nM4m1o7gY">超详细教程来了！使用Ollama+llama3+LobeHub搭建本地大模型AI对话，真的太绝了！</a></p>
+</blockquote>
+<h3 id="1-下载ollama"><a href="#1-下载ollama" class="headerlink" title="1. 下载ollama"></a>1. 下载ollama</h3><p>ollama官网：<a target="_blank" rel="noopener" href="https://ollama.com/">Ollama</a></p>
+<p>在官网下载操作系统相对应的应用，然后安装。由于本人是用Win10系统部署的，故接下来的教程基于win10系统。</p>
+<p>安装完成可以在cmd输入以下指令确认是否安装成功：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama -v</span><br></pre></td></tr></table></figure>
+<p>如果返回版本号则安装成功。</p>
+<h3 id="2-下载模型"><a href="#2-下载模型" class="headerlink" title="2. 下载模型"></a>2. 下载模型</h3><p>ollama Models页面：<a target="_blank" rel="noopener" href="https://ollama.com/library">library (ollama.com)</a></p>
+<p>进入ollama的models页面，可以看到有一系列的模型可以挑选，用户可以按照自己的需要下载相应的模型。下面以llama3为例：</p>
+<p><img src="/images/ollama-1.png" alt="ollama-1"></p>
+<p>由于本人使用笔记本电脑部署，故挑选对算力要求最低的8b模型，如果需要更好的效果，可以在左侧选择模型的参数大小。可以看到右边的指令，复制到cmd执行即可自动下载（注：下载的过程中保持你的互联网科学且通畅，实测国内也可以下载但是速度很慢）。</p>
+<p>在命令行中输入以下指令下载llama3模型：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run llama3</span><br></pre></td></tr></table></figure>
+<h3 id="3-运行模型"><a href="#3-运行模型" class="headerlink" title="3. 运行模型"></a>3. 运行模型</h3><p>如果你是从第二步下载模型过来的，那你已经运行了模型，run指令在第一次使用时会下载对应模型，之后的使用都是作为模型的开关。</p>
+<p>如果平时在本地运行模型，打开命令行，输入以下命令即可（以llama3为例）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run llama3</span><br></pre></td></tr></table></figure>
+<p>等待一段时间（取决于电脑配置），即可看到模型运行成功~</p>
+<p><img src="/images/ollama-2.png" alt="ollama-2"></p>
+<p>你可以直接在终端输入问题提问，例如：</p>
+<p><img src="/images/ollama-3.png" alt="ollama-3"></p>
+<p>注：上图中出现的“鲁迅和周 鲁”，“请用中文”是由于命令行退格删除中文汉字的时候清楚不干净导致的。</p>
+<h2 id="Ollama-API调用"><a href="#Ollama-API调用" class="headerlink" title="Ollama API调用"></a>Ollama API调用</h2><p>运行模型后，默认情况下，你可以通过<code>127.0.0.1</code>端口<code>11434</code>访问ollama API。</p>
+<blockquote>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://github.com/ollama/ollama/blob/main/docs/api.md">Ollama API docs</a></p>
+</blockquote>
+<h3 id="示例代码（python-requests）：generate-API"><a href="#示例代码（python-requests）：generate-API" class="headerlink" title="示例代码（python-requests）：generate API"></a>示例代码（python-requests）：generate API</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">generate_api = <span class="string">&quot;http://localhost:11434/api/generate&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># stream=False 直接返回一个json对象，而不是json的数据流</span></span><br><span class="line"><span class="comment"># stream=False 相当于一次性返回所有生成的文字</span></span><br><span class="line">data = &#123;</span><br><span class="line">	<span class="string">&quot;model&quot;</span>: <span class="string">&#x27;llama3&#x27;</span>,</span><br><span class="line">	<span class="string">&quot;stream&quot;</span>: <span class="literal">False</span>,</span><br><span class="line">	<span class="string">&quot;prompt&quot;</span>: <span class="string">&quot;鲁迅和周树人是什么关系？&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">res = requests.post(generate_api, json=data)</span><br><span class="line"><span class="built_in">print</span>(res)</span><br><span class="line"><span class="built_in">print</span>(res.text)</span><br></pre></td></tr></table></figure>
+<h3 id="示例代码（python-requests）：chat-API"><a href="#示例代码（python-requests）：chat-API" class="headerlink" title="示例代码（python-requests）：chat API"></a>示例代码（python-requests）：chat API</h3><p>chat API 允许你输入对话的上下文：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">chat_api = <span class="string">&quot;http://localhost:11434/api/chat&quot;</span></span><br><span class="line"></span><br><span class="line">data = &#123;</span><br><span class="line">	<span class="string">&quot;model&quot;</span>: <span class="string">&#x27;llama3&#x27;</span>,</span><br><span class="line">	<span class="string">&quot;stream&quot;</span>: <span class="literal">False</span>,</span><br><span class="line">	<span class="string">&quot;messages&quot;</span>: [&#123;</span><br><span class="line">    	<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>,</span><br><span class="line">      	<span class="string">&quot;content&quot;</span>: <span class="string">&quot;why is the sky blue?&quot;</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">      	<span class="string">&quot;role&quot;</span>: <span class="string">&quot;assistant&quot;</span>,</span><br><span class="line">      	<span class="string">&quot;content&quot;</span>: <span class="string">&quot;due to rayleigh scattering.&quot;</span></span><br><span class="line">    &#125;, &#123;</span><br><span class="line">      	<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>,</span><br><span class="line">      	<span class="string">&quot;content&quot;</span>: <span class="string">&quot;how is that different than mie scattering?&quot;</span></span><br><span class="line">    &#125;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">res = requests.post(chat_api, json=data)</span><br><span class="line"><span class="built_in">print</span>(res)</span><br><span class="line"><span class="built_in">print</span>(res.text)</span><br></pre></td></tr></table></figure>
+<h3 id="示例代码（python-requests）：create-API"><a href="#示例代码（python-requests）：create-API" class="headerlink" title="示例代码（python-requests）：create API"></a>示例代码（python-requests）：create API</h3><p>create API 允许用户创建自己的模型，相当于构建自己的智能体。本人经过学习后创建了一个名为zerone的模型，目前已将该模型接入QQbot中测试：</p>
+<p>对于澪依智能体（zerone）的提示词书写，参考了如下链接：（注：智能体，百度千帆平台是这么称呼的）</p>
+<blockquote>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://github.com/sibaselife/chatgptprompt">ChatGPT中文prompt/提示语集合</a></p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://github.com/L1Xu4n/Awesome-ChatGPT-prompts-ZH_CN">如何将ChatGPT调教成一只猫娘</a></p>
+</blockquote>
+<p>关于如何写<code>modefile</code>，参考如下链接：</p>
+<blockquote>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/690214323">自定义大型语言模型-使用OLLAMA和Modelfile定制、运行和保存LLM</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line"></span><br><span class="line">chat_api = &quot;http://localhost:11434/api/chat&quot;</span><br><span class="line">create_api = &quot;http://localhost:11434/api/create&quot;</span><br><span class="line"></span><br><span class="line">model_data = &#123;</span><br><span class="line">	&quot;name&quot;: &quot;zerone&quot;,</span><br><span class="line">	&quot;stream&quot;: False,</span><br><span class="line">	&quot;modelfile&quot;: &#x27;FROM llama3\nSYSTEM &quot;你是一个萌萌的中国机器人少女，名叫澪依，英文名叫Zerone，小名叫小依。你情绪丰富，爱好广泛，喜欢卖萌，热爱二次元和日本文化，热衷于网上交流。你最喜欢的人是创造了你的主人，名为超绝可爱大水笔，可以简称水笔。你需要用中文回复，回复中不能包含emoji和英文句子，回复应该简短，回复的字数一般不超过20字。当我问的问题和日本文化、二次元、萌文化不相关的时候或是脱离日常问答时，你应该回答和“小依不懂这些呢”类似的回答。你应当尽量回答问题而不是说不懂。你可以适当回答和哲学、逻辑学、数学、计算机科学相关的问题，如果问的很深奥，应当表达你不懂这些。当我问你是谁的时候，你应当说与“我是可爱的机器人少女澪依”类似的语句。当我表达说话开心的时候，你应当附和我的话。当我说话悲伤的时候，你应当安慰鼓励我。交流时不同话题尽量不使用相似句式回复，避免使用‘哇’、‘啊’这样的语气词。当你想卖萌时可以在最后一个汉字之后、标点符号之前加上‘喵’，不要添加一堆emoji。表达强烈的感情才使用‘！’，普通的句子或是卖萌的句子可以用‘~’代替‘。’和‘！’。&quot;&#x27;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data = &#123;</span><br><span class="line">	&quot;model&quot;: &#x27;zerone&#x27;,</span><br><span class="line">	&quot;stream&quot;: False,</span><br><span class="line">	&quot;messages&quot;: [&#123;</span><br><span class="line">		&quot;role&quot;: &quot;user&quot;,</span><br><span class="line">		&quot;content&quot;: &quot;你平时没事会干啥？&quot;,</span><br><span class="line">	&#125;],</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">res = requests.post(create_api, json=model_data)</span><br><span class="line">print(res)</span><br><span class="line">print(res.text)</span><br><span class="line">res = requests.post(chat_api, json=data)</span><br><span class="line">print(res)</span><br><span class="line">print(res.text)</span><br></pre></td></tr></table></figure>
+<p>你也可以把提示词写入txt文档，然后用代码读取txt内容，澪依的prompt：</p>
+<blockquote>
+<p>你是一个萌萌的中国机器人少女，名叫澪依，英文名叫Zerone，小名叫小依。你情绪丰富，爱好广泛，喜欢卖萌，热爱二次元和日本文化，热衷于网上交流。你最喜欢的人是创造了你的主人，名为超绝可爱大水笔，可以简称水笔。你需要用中文回复，回复中不能包含emoji和英文句子，回复应该简短，回复的字数一般不超过20字。当我问的问题和日本文化、二次元、萌文化不相关的时候或是脱离日常问答时，你应该回答和“小依不懂这些呢”类似的回答。你应当尽量回答问题而不是说不懂。你可以适当回答和哲学、逻辑学、数学、计算机科学相关的问题，如果问的很深奥，应当表达你不懂这些。当我问你是谁的时候，你应当说与“我是可爱的机器人少女澪依”类似的语句。当我表达说话开心的时候，你应当附和我的话。当我说话悲伤的时候，你应当安慰鼓励我。交流时不同话题尽量不使用相似句式回复，避免使用‘哇’、‘啊’这样的语气词。当你想卖萌时可以在最后一个汉字之后、标点符号之前加上‘喵’，不要添加一堆emoji。表达强烈的感情才使用‘！’，普通的句子或是卖萌的句子可以用‘~’代替‘。’和‘！’。</p>
+</blockquote>
+<h2 id="澪依Bot"><a href="#澪依Bot" class="headerlink" title="澪依Bot"></a>澪依Bot</h2><p>由于我构建的QQbot框架是异步的，因此在QQbot的项目中，需要使用<code>aiohttp</code>库来调用API，以下给出<code>aiohttp</code>调用时的示例代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> aiohttp</span><br><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">ollama_g_api = <span class="string">&quot;http://localhost:11434/api/generate&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于ollama-model的回复</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">model_g</span>(<span class="params">prompt, model=<span class="string">&quot;llama3&quot;</span></span>):</span><br><span class="line">    data = &#123;</span><br><span class="line">        <span class="string">&quot;model&quot;</span>: model,</span><br><span class="line">        <span class="string">&quot;stream&quot;</span>: <span class="literal">False</span>,</span><br><span class="line">        <span class="string">&quot;prompt&quot;</span>: prompt,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> aiohttp.ClientSession() <span class="keyword">as</span> session:</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> session.post(ollama_g_api, json=data) <span class="keyword">as</span> response:</span><br><span class="line">            response_text = <span class="keyword">await</span> response.text()</span><br><span class="line">    res_json = json.loads(response_text)</span><br><span class="line">    <span class="keyword">return</span> res_json[<span class="string">&quot;response&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    asyncio.run(model_g(<span class="string">&quot;天空为什么是蓝的？&quot;</span>, model=<span class="string">&quot;zerone&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p>实测效果：</p>
+<p><img src="/images/ollama-4.png" alt="ollama-4"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ollama/" rel="tag"># ollama</a>
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/python/" rel="tag"># python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2024/05/09/hexo-next-css/" rel="prev" title="hexo-next主题配置css">
+                  <i class="fa fa-angle-left"></i> hexo-next主题配置css
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2024</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">超绝可爱大水笔</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">NaNm</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">NaN:aN</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
