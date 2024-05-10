@@ -19,32 +19,33 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.20.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="这是在首页显示摘要和一张图片的写法。 本文测试了数学环境、图片、外链、标签、分类的功能。">
+    <meta name="description" content="本文介绍了如何配置neovim。手动配置的部分没有详细介绍，主要介绍了LazyVim的配置和个人的按键偏好设置。本文写于2024&#x2F;04&#x2F;20，早于本博客建立。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello Hexo">
-<meta property="og:url" content="http://example.com/2024/05/02/hello-world/index.html">
+<meta property="og:title" content="neovim配置">
+<meta property="og:url" content="http://example.com/2024/05/10/neovim-env/index.html">
 <meta property="og:site_name" content="大水笔✰档案室">
-<meta property="og:description" content="这是在首页显示摘要和一张图片的写法。 本文测试了数学环境、图片、外链、标签、分类的功能。">
+<meta property="og:description" content="本文介绍了如何配置neovim。手动配置的部分没有详细介绍，主要介绍了LazyVim的配置和个人的按键偏好设置。本文写于2024&#x2F;04&#x2F;20，早于本博客建立。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/images/348420.jpg">
-<meta property="og:image" content="http://example.com/images/348420.jpg">
-<meta property="article:published_time" content="2024-05-02T13:22:36.990Z">
-<meta property="article:modified_time" content="2024-05-08T18:11:17.564Z">
+<meta property="og:image" content="http://example.com/images/100894625.png">
+<meta property="article:published_time" content="2024-05-10T12:17:48.203Z">
+<meta property="article:modified_time" content="2024-05-10T12:26:04.717Z">
 <meta property="article:author" content="超绝可爱大水笔">
-<meta property="article:tag" content="环境搭建">
-<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="环境配置">
+<meta property="article:tag" content="Vim">
+<meta property="article:tag" content="Neovim">
+<meta property="article:tag" content="LazyVim">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/images/348420.jpg">
+<meta name="twitter:image" content="http://example.com/images/100894625.png">
 
 
-<link rel="canonical" href="http://example.com/2024/05/02/hello-world/">
+<link rel="canonical" href="http://example.com/2024/05/10/neovim-env/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/05/02/hello-world/","path":"2024/05/02/hello-world/","title":"Hello Hexo"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2024/05/10/neovim-env/","path":"2024/05/10/neovim-env/","title":"neovim配置"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Hello Hexo | 大水笔✰档案室</title>
+<title>neovim配置 | 大水笔✰档案室</title>
   
 
 
@@ -116,7 +117,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%99%E6%98%AF%E6%B5%8B%E8%AF%95%E7%94%A8%E7%9A%84%E6%96%87%E7%AB%A0"><span class="nav-number">1.</span> <span class="nav-text">这是测试用的文章</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E6%95%B0%E5%AD%A6%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">搭建数学环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E5%86%85%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">行内数学公式：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%8C%E9%97%B4%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8F%EF%BC%88%E4%B8%8B%E9%9D%A2%E5%86%99%E4%BA%86%E4%B8%80%E6%9D%A1%E8%A1%8C%E9%97%B4%E5%85%AC%E5%BC%8F%EF%BC%8C%E7%94%A8%E4%B8%8D%E4%BA%86%EF%BC%89%EF%BC%9A"><span class="nav-number">2.2.</span> <span class="nav-text">行间数学公式（下面写了一条行间公式，用不了）：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E7%89%87%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">图片：</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AD%A3%E6%96%87"><span class="nav-number">1.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Neovim%E4%B8%8B%E8%BD%BD"><span class="nav-number">1.1.</span> <span class="nav-text">Neovim下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Neovim%E6%89%8B%E5%8A%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">Neovim手动配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LazyVim"><span class="nav-number">1.3.</span> <span class="nav-text">LazyVim</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Windows%E7%94%A8%E6%88%B7%E6%B3%A8%E6%84%8F"><span class="nav-number">1.3.1.</span> <span class="nav-text">Windows用户注意</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vim%E4%B8%AA%E4%BA%BA%E9%85%8D%E7%BD%AE%E5%81%8F%E5%A5%BD"><span class="nav-number">1.4.</span> <span class="nav-text">Vim个人配置偏好</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -177,7 +178,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/05/02/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/05/10/neovim-env/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/uuz_kanata_01.png">
@@ -190,12 +191,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Hello Hexo | 大水笔✰档案室">
+      <meta itemprop="name" content="neovim配置 | 大水笔✰档案室">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello Hexo
+          neovim配置
         </h1>
 
         <div class="post-meta-container">
@@ -205,15 +206,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2024-05-02 21:22:36" itemprop="dateCreated datePublished" datetime="2024-05-02T21:22:36+08:00">2024-05-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-05-09 02:11:17" itemprop="dateModified" datetime="2024-05-09T02:11:17+08:00">2024-05-09</time>
+      <time title="创建时间：2024-05-10 20:17:48 / 修改时间：20:26:04" itemprop="dateCreated datePublished" datetime="2024-05-10T20:17:48+08:00">2024-05-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -221,7 +216,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Test/" itemprop="url" rel="index"><span itemprop="name">Test</span></a>
+          <a href="/categories/LazyVim/" itemprop="url" rel="index"><span itemprop="name">LazyVim</span></a>
         </span>
     </span>
 
@@ -239,7 +234,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>356</span>
+      <span>1.2k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -256,23 +251,28 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>这是在首页显示摘要和一张图片的写法。</p>
-<p>本文测试了数学环境、图片、外链、标签、分类的功能。</p>
-<p><img src="/images/348420.jpg" alt="348420"></p>
+    <div class="post-body" itemprop="articleBody"><p>本文介绍了如何配置neovim。手动配置的部分没有详细介绍，主要介绍了LazyVim的配置和个人的按键偏好设置。本文写于2024/04/20，早于本博客建立。</p>
+<p><img src="/images/100894625.png" alt="100894625"></p>
 <span id="more"></span>
-<h1 id="这是测试用的文章"><a href="#这是测试用的文章" class="headerlink" title="这是测试用的文章"></a>这是测试用的文章</h1><p>Hello Hexo！这是一篇测试用的文章！本博客搭建于：2024/05/02</p>
-<h1 id="搭建数学环境"><a href="#搭建数学环境" class="headerlink" title="搭建数学环境"></a>搭建数学环境</h1><p>教程请参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/ssjdoudou/article/details/103318019">Hexo-next主题支持数学公式_hexo next 主题 数学公式-CSDN博客</a></p>
-<p>这个教程仅解决了行内公式，但是通过改变写法可以写出行间公式。</p>
-<h2 id="行内数学公式："><a href="#行内数学公式：" class="headerlink" title="行内数学公式："></a>行内数学公式：</h2><p>示例：这是一段文字，后面有公式：$E = mc^2$，后面还有一段文字</p>
-<h2 id="行间数学公式（下面写了一条行间公式，用不了）："><a href="#行间数学公式（下面写了一条行间公式，用不了）：" class="headerlink" title="行间数学公式（下面写了一条行间公式，用不了）："></a>行间数学公式（下面写了一条行间公式，用不了）：</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br><span class="line">E=mc<span class="built_in">^</span>2</span><br><span class="line"><span class="built_in">$</span><span class="built_in">$</span></span><br></pre></td></tr></table></figure>
-<p>示例（无法成功加载，因此是空白）：</p>
-<script type="math/tex; mode=display">
-E = mc^2</script><p>但我们可以换一种写法，代替方案：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">center</span>&gt;</span>$E = mc^2$<span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>示例：</p>
-<center>$E = mc^2$</center>
-
-<h1 id="图片："><a href="#图片：" class="headerlink" title="图片："></a>图片：</h1><p>示例（PixivId: 348420）：<br><img src="/images/348420.jpg" alt="348420"></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>在编程的世界中，有两个上古神器。一个叫做“神之编辑器 Emacs”，另一个叫做“编辑器之神 vim“。这两个编辑器从诞生到现在，圣战从未结束。无论是<code>vim</code>还是<code>emacs</code>都在不断的进化和发展，渐渐的<code>vim</code>的分支上出现了一颗夺目的新星，他就是<code>neovim</code>。</p>
+<p>版本控制工具<code>git</code>默认的文本编辑器通常就是<code>vi/vim</code>。</p>
+<h2 id="Neovim下载"><a href="#Neovim下载" class="headerlink" title="Neovim下载"></a>Neovim下载</h2><blockquote>
+<p>下载链接：<a target="_blank" rel="noopener" href="https://neovim.io/">Home - Neovim</a></p>
+</blockquote>
+<h2 id="Neovim手动配置"><a href="#Neovim手动配置" class="headerlink" title="Neovim手动配置"></a>Neovim手动配置</h2><blockquote>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1zY4y1Z7FR">【教完必会】从0带你入门Vim-教程Part2 Neovim</a><br>参考链接：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV18N411M7Cr">neovim的安装和初始化配置及插件管理</a><br>参考链接：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv27907470/">nvim在win10和mac上的安装和初始设置及插件入门</a><br>参考链接：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/638379995?utm_id=0">lazy-nvim插件管理器基础入门</a></p>
+</blockquote>
+<p>手动配置踩的坑太多，没有记录下来，推荐使用LazyVim。如果想要手配自己看上面的教程。</p>
+<h2 id="LazyVim"><a href="#LazyVim" class="headerlink" title="LazyVim"></a>LazyVim</h2><blockquote>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://www.lazyvim.org/">🚀 Getting Started | LazyVim</a><br>参考链接：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1ds4y1P7Rs">【教完必会】别再说配置neovim麻烦了！给我1分钟就够！— Lazyvim教程_</a></p>
+</blockquote>
+<h3 id="Windows用户注意"><a href="#Windows用户注意" class="headerlink" title="Windows用户注意"></a>Windows用户注意</h3><p>Windows下需要自己下载安装<code>nvim</code>，然后在<code>C:/Users/username/AppData/Local/</code>下创建<code>nvim</code>文件夹后，在<code>cmd</code>输入以下代码安装<code>lazyvim</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/LazyVim/starter C:/Users/username/AppData/Local/nvim-data</span><br></pre></td></tr></table></figure>
+<p>之后就和官网上的指引一样。</p>
+<h2 id="Vim个人配置偏好"><a href="#Vim个人配置偏好" class="headerlink" title="Vim个人配置偏好"></a>Vim个人配置偏好</h2><p>本人<code>options.lua</code>的配置：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> opt = vim.opt</span><br><span class="line"><span class="comment">-- 反转数字的选项</span></span><br><span class="line">opt.relativenumber = <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>本人<code>keymaps.lua</code>的配置</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> keymap = vim.keymap</span><br><span class="line"><span class="comment">-- Insert mode</span></span><br><span class="line">keymap.set(<span class="string">&quot;i&quot;</span>, <span class="string">&quot;jk&quot;</span>, <span class="string">&quot;&lt;ESC&gt;&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Window control</span></span><br><span class="line">keymap.set(<span class="string">&quot;n&quot;</span>, <span class="string">&quot;&lt;leader&gt;sv&quot;</span>, <span class="string">&quot;&lt;C-w&gt;&quot;</span>)</span><br><span class="line">keymap.set(<span class="string">&quot;n&quot;</span>, <span class="string">&quot;&lt;leader&gt;sx&quot;</span>, <span class="string">&quot;:close&lt;cr&gt;&quot;</span>)</span><br><span class="line"><span class="comment">-- Remove search highlight</span></span><br><span class="line">keymap.set(<span class="string">&quot;n&quot;</span>, <span class="string">&quot;&lt;leader&gt;ch&quot;</span>, <span class="string">&quot;:nohl&lt;cr&gt;&quot;</span>)</span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -282,18 +282,23 @@ E = mc^2</script><p>但我们可以换一种写法，代替方案：</p>
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag"># 环境搭建</a>
-              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" rel="tag"># 环境配置</a>
+              <a href="/tags/Vim/" rel="tag"># Vim</a>
+              <a href="/tags/Neovim/" rel="tag"># Neovim</a>
+              <a href="/tags/LazyVim/" rel="tag"># LazyVim</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/2024/05/10/ollama/" rel="prev" title="ollama本地部署文本生成模型">
+                  <i class="fa fa-angle-left"></i> ollama本地部署文本生成模型
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2024/05/03/template/" rel="next" title="模板文章">
-                  模板文章 <i class="fa fa-angle-right"></i>
+                <a href="/2024/05/10/lazyvim-shortcut/" rel="next" title="LazyVim常用快捷键">
+                  LazyVim常用快捷键 <i class="fa fa-angle-right"></i>
                 </a>
             </div>
           </div>
